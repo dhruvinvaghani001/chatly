@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
@@ -12,6 +12,11 @@ import {
   FormMessage
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import toast from 'react-hot-toast'
+import { requestHandler } from '@/lib/requestHandler'
+import { signUp } from '@/api'
+import { useNavigate } from 'react-router-dom'
+import { Loader2 } from 'lucide-react'
 
 const formSchema = z
   .object({
@@ -28,6 +33,9 @@ const formSchema = z
   })
 
 const SignupForm = () => {
+  const [loading, setLoading] = useState(false)
+  const navigate = useNavigate()
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -36,8 +44,27 @@ const SignupForm = () => {
       password: ''
     }
   })
-  function onSubmit (values: z.infer<typeof formSchema>) {
-    console.log(values)
+
+  // api call more signup
+  async function onSubmit (values: z.infer<typeof formSchema>) {
+    try {
+      await requestHandler(
+        async () => await signUp(values),
+        setLoading,
+        res => {
+          console.log(res)
+          if (res.success) {
+            toast.success(res.message)
+            navigate('/login')
+          }
+        },
+        err => {
+          toast.error(err)
+        }
+      )
+    } catch (error) {
+      toast.error(error?.message)
+    }
   }
   return (
     <Form {...form}>
@@ -94,7 +121,9 @@ const SignupForm = () => {
             </FormItem>
           )}
         />
-        <Button type='submit'>Submit</Button>
+        <Button type='submit' disabled={loading}>
+          {loading ? <Loader2 className='animate-spin' /> : 'Sign up'}
+        </Button>
       </form>
     </Form>
   )

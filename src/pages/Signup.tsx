@@ -1,4 +1,4 @@
-import SignupForm from '@/components/Auth/SignupForm'
+import SignupForm from '@/components/auth/SignupForm'
 import {
   Card,
   CardContent,
@@ -15,7 +15,7 @@ const Signup = () => {
       <div className='max-w-sm  mx-auto'>
         <Card className=''>
           <CardHeader>
-            <CardTitle>Start Your Journey</CardTitle>
+            <CardTitle>Sign Up Now</CardTitle>
             <CardDescription>
               Sign up is quick and easy! Just a few details and you're in!
             </CardDescription>

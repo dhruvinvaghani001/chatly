@@ -1,4 +1,5 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { encryptStorage } from "@/lib/storage";
+import { createSlice } from "@reduxjs/toolkit";
 import { useSelector } from "react-redux";
 
 export interface User {
@@ -14,24 +15,25 @@ interface AuthState {
   userData: User | null;
 }
 
+const storedUser = encryptStorage?.getItem("user");
 const initialState: AuthState = {
-  status: localStorage?.getItem("user") ? true : false,
-  userData: JSON.parse(localStorage?.getItem("user")),
+  status: !!storedUser,
+  userData: storedUser ? storedUser : null,
 };
 
 const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    login: (state, action: PayloadAction<{ user: User }>) => {
+    login: (state, action) => {
       state.status = true;
       state.userData = action.payload.user;
-      localStorage.setItem("user", JSON.stringify(action.payload.user));
+      encryptStorage.setItem("user", action.payload.user);
     },
     logOut: (state) => {
       state.status = false;
       state.userData = null;
-      localStorage.removeItem("user");
+      encryptStorage.removeItem("user");
     },
   },
 });

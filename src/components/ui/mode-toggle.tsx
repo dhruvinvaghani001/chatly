@@ -10,7 +10,7 @@ import {
 import { useTheme } from './theme-provider'
 import { cn } from '@/lib/utils'
 
-export function ModeToggle ({ className }) {
+export function ModeToggle ({ className }: { className?: string }) {
   const { setTheme } = useTheme()
 
   return (

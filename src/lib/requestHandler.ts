@@ -7,12 +7,16 @@
     @returns {void} - Hanldes api call
 */
 
+import { encryptStorage } from "./storage";
+
 const requestHandler = async (api, setLoading, onSuccess, onError) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-expressions
   setLoading && setLoading(true);
   try {
     const response = await api();
+
     const { data } = response;
-    // console.log(data);
+
     if (data?.success) {
       onSuccess(data);
     }
@@ -20,10 +24,12 @@ const requestHandler = async (api, setLoading, onSuccess, onError) => {
     if ([401, 403].includes(error?.response?.data?.statusCode)) {
       onError(error?.message || "please login again !");
       if (isBrowser) window.location.href = "/login";
-      localStorage.removeItem("user");
+      encryptStorage.removeItem("user");
     }
+    // console.log("error", error);
     onError(error?.message || "something went wrong!!");
   } finally {
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     setLoading && setLoading(false);
   }
 };

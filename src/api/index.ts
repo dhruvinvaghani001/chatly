@@ -1,3 +1,4 @@
+import { encryptStorage } from "@/lib/storage";
 import axios from "axios";
 
 /*create a axios instance with server base URL*/
@@ -13,8 +14,7 @@ const axiosInstance = axios.create({
  */
 axiosInstance.interceptors.request.use(
   function (config) {
-    const userString = localStorage.getItem("user");
-    const user = JSON.parse(userString);
+    const user = encryptStorage.getItem("user");
     config.headers.Authorization = `Bearer ${user?.acessToken}`;
     return config;
   },
@@ -33,12 +33,12 @@ axiosInstance.interceptors.response.use(
   }
 );
 
-/**
- * @param {*} data {username,email,password,confirmPassword} serverUrl (server url for authenctiocaton of user )
- * @returns a <Promise> of api call
- */
-const autheticateUser = ({ serverURL, data }) => {
-  return axiosInstance.post(`/user/${serverURL}`, data);
+const signUp = (data) => {
+  return axiosInstance.post("/user/signup", data);
+};
+
+const login = (data) => {
+  return axiosInstance.post("/user/login", data);
 };
 
 /**
@@ -152,7 +152,8 @@ const addunreadMessage = ({ userId, messageId, chatId }) => {
 };
 
 export {
-  autheticateUser,
+  signUp,
+  login,
   logout,
   searchAvailableUser,
   createOneToOneChat,
