@@ -7,11 +7,11 @@ import { requestHandler } from '@/lib/requestHandler'
 import { setChats, useChatContext } from '@/context/chatSlice'
 import toast from 'react-hot-toast'
 import { getAllChats } from '@/api'
-import { useAuthContext } from '@/context/authSlice'
 import { useDispatch } from 'react-redux'
 import AllChats from './AllChats'
 import { DialogForm } from './DialogForm'
 import { Loader2 } from 'lucide-react'
+import { Switch } from '@radix-ui/react-switch'
 
 const Sidebar = () => {
   const { width } = useWindowsize()
@@ -39,9 +39,9 @@ const Sidebar = () => {
     <>
       {width < 768 && <MobileSidebar chats={chats} />}
       {width >= 768 && (
-        <div className='hidden md:flex md:w-80 flex-col border-r border-gray-700'>
-          <div className='p-4 border-b border-gray-700 flex justify-between items-center'>
-            <h2 className='text-xl font-semibold'>Chats (4)</h2>
+        <div className='hidden md:flex md:w-80 flex-col border-r border-secondary'>
+          <div className='p-4 border-b border-secondary flex justify-between items-center'>
+            <h2 className='text-xl font-semibold'>Chats</h2>
             <div className='flex space-x-2'>
               <DialogForm />
             </div>

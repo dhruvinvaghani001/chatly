@@ -26,7 +26,7 @@ const ChatInterface = () => {
   ]
 
   return (
-    <div className='flex h-screen bg-gray-900 text-white'>
+    <div className='flex h-screen bg-background'>
       {/* Compact Sidebar for Small Devices */}
       <Sidebar />
 
