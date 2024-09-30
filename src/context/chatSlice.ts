@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { useSelector } from "react-redux";
 import { User } from "./authSlice";
+import { encryptStorage } from "@/lib/storage";
 
 interface Member {
   _id: string;
@@ -45,8 +46,8 @@ interface chatStoreState {
 
 const initialState: chatStoreState = {
   chats: [],
-  selectedChat: JSON.parse(localStorage?.getItem("selected-chat")) || null,
-  unreadMessages: JSON.parse(localStorage?.getItem("unread-messages")) || [],
+  selectedChat: encryptStorage.getItem("selected-chat") || null,
+  unreadMessages: encryptStorage.getItem("unread-messages") || [],
 };
 
 const chatSlice = createSlice({
@@ -55,10 +56,7 @@ const chatSlice = createSlice({
   reducers: {
     setSelectedChat: (state, action) => {
       state.selectedChat = action.payload.chat;
-      localStorage.setItem(
-        "selected-chat",
-        JSON.stringify(action.payload.chat)
-      );
+      encryptStorage.setItem("selected-chat", action.payload.chat);
     },
     setChats: (state, action) => {
       state.chats = action.payload.chat;
@@ -94,10 +92,7 @@ const chatSlice = createSlice({
       const uniqueObjectArray = [...map.values()];
 
       state.unreadMessages = uniqueObjectArray;
-      localStorage.setItem(
-        "unread-messages",
-        JSON.stringify(state.unreadMessages)
-      );
+      encryptStorage.setItem("unread-messages", state.unreadMessages);
     },
     setUnreadMessages: (state, action) => {
       const map = new Map();
@@ -108,10 +103,7 @@ const chatSlice = createSlice({
       });
       const uniqueObjectArray = [...map.values()];
       state.unreadMessages = uniqueObjectArray;
-      localStorage.setItem(
-        "unread-messages",
-        JSON.stringify(state.unreadMessages)
-      );
+      encryptStorage.setItem("unread-messages", state.unreadMessages);
     },
     removeUnnreadMessages: (state, action) => {
       const chatId = action.payload.chatId;
@@ -119,10 +111,7 @@ const chatSlice = createSlice({
         (message) => message.chat.toString() != chatId
       );
       state.unreadMessages = filteredMessages;
-      localStorage.setItem(
-        "unread-messages",
-        JSON.stringify(state.unreadMessages)
-      );
+      encryptStorage.setItem("unread-messages", state.unreadMessages);
     },
   },
 });
