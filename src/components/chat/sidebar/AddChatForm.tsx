@@ -1,122 +1,220 @@
-import { Switch } from '@radix-ui/react-switch'
-import React, { useState } from 'react'
+import { createGroup, createOneToOneChat, searchAvailableUser } from '@/api'
+import { requestHandler } from '@/lib/requestHandler'
+import React, { useEffect, useState } from 'react'
+import toast from 'react-hot-toast'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@radix-ui/react-tabs'
+import { Combobox } from '../../ui/Combobox'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle
+} from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { useDispatch } from 'react-redux'
+import { addChat, setSelectedChat } from '@/context/chatSlice'
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { Loader2 } from 'lucide-react'
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  Form
+} from '@/components/ui/form'
 
-const AddChatForm = () => {
-  const [isGroup, setIsgroup] = useState(false)
+import { MultiSelectCombobox } from '../../ui/MultiSelectCombobox'
+import { Input } from '@/components/ui/input'
+
+const groupSchema = z.object({
+  name: z.string().min(3, 'Minimum 3 charcterlong group name'),
+  members: z
+    .array(z.object({ label: z.string(), value: z.string() }))
+    .min(2, 'Please select minimum 2  memeber to create group')
+    .max(120, 'You cannot form group more than 120 people!')
+})
+
+const AddChatForm = ({ open, setIsOpen }) => {
+  const [users, setUsers] = useState([])
+  const [loading, setLoading] = useState(false)
+  const [selectedUser, setSelectedUser] = useState()
+  const [isSubmitting, setIssubmitting] = useState(false)
+  const dispatch = useDispatch()
+
+  const form = useForm<z.infer<typeof groupSchema>>({
+    resolver: zodResolver(groupSchema),
+    defaultValues: {
+      name: '',
+      members: []
+    }
+  })
+
+  useEffect(() => {
+    requestHandler(
+      async () => await searchAvailableUser(),
+      setLoading,
+      res => {
+        const { data } = res
+        const availabelUser = data.map(usr => {
+          return { value: usr._id, label: usr.username }
+        })
+        setUsers(availabelUser)
+      },
+      err => {
+        toast.error(err)
+      }
+    )
+  }, [])
+
+  const createOne2OneChat = async e => {
+    e.preventDefault()
+    if (!selectedUser) {
+      toast.error('Please Select user')
+      return
+    } else {
+      await requestHandler(
+        async () => createOneToOneChat(selectedUser),
+        setIssubmitting,
+        res => {
+          const { data } = res
+          if (res.stausCode == 201) {
+            console.log('hello')
+            dispatch(addChat({ chat: data }))
+            setIsOpen(false)
+            toast.success(res.message)
+          } else {
+            dispatch(setSelectedChat({ chat: data }))
+            setIsOpen(false)
+            toast.success(res.message)
+          }
+        },
+        err => {
+          toast.error(err?.message || 'Something went wrong!')
+          setIsOpen(false)
+        }
+      )
+    }
+  }
+
+  const createGroupChat = async (values: z.infer<typeof groupSchema>) => {
+    const members = values?.members.map(iteam => iteam.value)
+    const data = {
+      name: values?.name,
+      members: members
+    }
+    requestHandler(
+      async () => await createGroup(data),
+      setIssubmitting,
+      res => {
+        const { data } = res
+        dispatch(addChat({ chat: data }))
+        dispatch(setSelectedChat({ chat: data }))
+        setIsOpen(false)
+        toast.success(res.message)
+      },
+      err => {
+        toast.error(err?.message || 'Something Went Wrong!')
+      }
+    )
+  }
 
   return (
-    <>
-      <Switch></Switch>
-    </>
+    <Tabs defaultValue='one2one' className='w-full max-w-[450px] mt-4'>
+      <TabsList className='grid w-full grid-cols-2 mb-4'>
+        <TabsTrigger
+          value='one2one'
+          className='data-[state=active]:bg-muted-foreground rounded-lg'
+        >
+          one to one
+        </TabsTrigger>
+        <TabsTrigger
+          value='group'
+          className='data-[state=active]:bg-muted-foreground rounded-lg'
+        >
+          group chat
+        </TabsTrigger>
+      </TabsList>
+      <TabsContent value='one2one'>
+        <Card className='border-none'>
+          <CardHeader>
+            <CardTitle>One To One Chat</CardTitle>
+            <CardDescription>Select User and start chat now.</CardDescription>
+          </CardHeader>
+          <CardContent className='space-y-2'>
+            <Combobox
+              options={users}
+              setValue={setSelectedUser}
+              value={selectedUser}
+              loading={loading}
+            ></Combobox>
+          </CardContent>
+          <CardFooter>
+            <Button onClick={createOne2OneChat} disabled={isSubmitting}>
+              Start
+            </Button>
+          </CardFooter>
+        </Card>
+      </TabsContent>
+      <TabsContent value='group'>
+        <Card className='border-none'>
+          <CardHeader>
+            <CardTitle>Group Chat</CardTitle>
+            <CardDescription>
+              select users and start group discussion.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className='space-y-2'>
+            <Form {...form}>
+              <form
+                onSubmit={form.handleSubmit(createGroupChat)}
+                className='space-y-8'
+              >
+                <FormField
+                  control={form.control}
+                  name='name'
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Group Name</FormLabel>
+                      <FormControl>
+                        <Input placeholder='Group name' {...field} />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name='members'
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Select Group Members</FormLabel>
+                      <FormControl>
+                        <MultiSelectCombobox
+                          users={users}
+                          selectedUser={field.value}
+                          onChange={field.onChange}
+                        />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+                <Button disabled={isSubmitting}>
+                  {isSubmitting ? (
+                    <Loader2 className='animate-spin'></Loader2>
+                  ) : (
+                    'Start'
+                  )}
+                </Button>
+              </form>
+            </Form>
+          </CardContent>
+        </Card>
+      </TabsContent>
+    </Tabs>
   )
 }
 
 export default AddChatForm
-
-// onst ChatForm = ({ setIsOpen }) => {
-//   const [enabled, setEnabled] = useState(false);
-//   const [selected, setSelected] = useState({});
-//   const [loading, setLoading] = useState(false);
-//   const [selectedUser, setSelectedUser] = useState([]);
-//   const [groupName, setGroupName] = useState("");
-
-//   const dispatch = useDispatch();
-
-//   const handleSubmit = (e) => {
-//     e.preventDefault();
-//     if (!enabled) {
-//       const userId = selected?._id;
-//       if (!userId) {
-//         toast.error("please select user to create chat!");
-//         return;
-//       }
-
-//       requestHandler(
-//         async () => await createOneToOneChat(userId),
-//         setLoading,
-//         (res) => {
-//           const { data } = res;
-//           if (res.stausCode == 201) {
-//             console.log("hello");
-//             dispatch(addChat({ chat: data }));
-//           }
-//           setIsOpen(false);
-//           if (data) {
-//             toast.success(res.message);
-//           }
-//         },
-//         (err) => {
-//           toast.error(err);
-//         }
-//       );
-//     } else {
-//       if (groupName.trim() == "") {
-//         toast.error("group name is required!");
-//         return;
-//       }
-//       if (selectedUser.length < 2) {
-//         toast.error("There should be 2 minimum mebers to create a group!");
-//         return;
-//       }
-//       const members = selectedUser.map((iteam) => iteam._id);
-//       const data = {
-//         name: groupName,
-//         members,
-//       };
-//       requestHandler(
-//         async () => await createGroup(data),
-//         setLoading,
-//         (res) => {
-//           const { data } = res;
-//           toast.success(res.message);
-//           dispatch(addChat({ chat: data }));
-//           setIsOpen(false);
-//         },
-//         (err) => {
-//           toast.error(err);
-//         }
-//       );
-//     }
-//   };
-
-//   return (
-//     <div className="mt-8">
-//       <div className="flex items-center mb-6 justify-start">
-//         <Toggle enabled={enabled} setEnabled={setEnabled} />
-//         <p className="text-black text-lg ml-2">is group chat ?</p>
-//       </div>
-//       <div>
-//         <form onSubmit={handleSubmit}>
-//           <div>
-//             {enabled && (
-//               <Input
-//                 title="group name"
-//                 classNameInput="w-full border-none py-3 pl-3 pr-10 text-sm leading-5 text-white focus:ring-0 focus:outline-none "
-//                 classNameLabel="text-black text-xl"
-//                 onchange={(e) => setGroupName(e.target.value)}
-//               />
-//             )}
-//           </div>
-//           <div className="mt-2">
-//             <p className="text-xl text-black "> users</p>
-//             {!enabled ? (
-//               <ComboBox selected={selected} setSelected={setSelected} />
-//             ) : (
-//               <MultipleSelectComboBox
-//                 selected={selectedUser}
-//                 setSelected={setSelectedUser}
-//               />
-//             )}
-//           </div>
-
-//           <Button className="py-2 px-4 mt-4 flex  items-center bg-violet-700">
-//             <p className="mr-2 text-xl">{loading ? "Creating..." : "Create"}</p>
-//             {loading ? <LoadingSpinner height={32} width={32} /> : null}
-//           </Button>
-//         </form>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default ChatForm;

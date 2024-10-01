@@ -1,37 +1,47 @@
-import React from 'react'
-import ChatArea from './ChatArea'
+import React, { useEffect, useState } from 'react'
+import ChatArea from './chatArea/ChatArea'
 import Sidebar from './sidebar/Sidebar'
+import { useChatContext } from '@/context/chatSlice'
+import useMessages from '@/context/zustand'
+import { requestHandler } from '@/lib/requestHandler'
+import { getMessagesByChatId } from '@/api'
+import toast from 'react-hot-toast'
 
 const ChatInterface = () => {
-  const messages = [
-    {
-      sender: 'Jane Doe',
-      content: 'Hey, Jakob',
-      time: '10:00 AM',
-      isUser: false
-    },
-    { sender: 'Jakob', content: 'Hey!', time: '10:01 AM', isUser: true },
-    {
-      sender: 'Jane Doe',
-      content: 'How are you?',
-      time: '10:02 AM',
-      isUser: false
-    },
-    {
-      sender: 'Jakob',
-      content: 'I am good, you?',
-      time: '10:03 AM',
-      isUser: true
+  const { setMessages } = useMessages()
+  const [loading, setLoading] = useState()
+
+  const { selectedChat } = useChatContext()
+
+  useEffect(() => {
+    if (selectedChat) {
+      requestHandler(
+        async () => await getMessagesByChatId(selectedChat?._id),
+        setLoading,
+        res => {
+          const { data } = res
+          setMessages(data)
+        },
+        err => {
+          toast.error(err)
+        }
+      )
     }
-  ]
+  }, [selectedChat?._id])
 
   return (
     <div className='flex h-screen bg-background'>
-      {/* Compact Sidebar for Small Devices */}
       <Sidebar />
 
       {/* Chat Area */}
-      <ChatArea messages={messages} />
+      {selectedChat && <ChatArea />}
+      {!selectedChat && (
+        <div className='h-[100vh] w-full flex items-center justify-center'>
+          <h2 className='text-2xl md:text-5xl text-primary font-extrabold tracking-wider font-sans'>
+            Start Chatting Now . . .
+          </h2>
+        </div>
+      )}
     </div>
   )
 }
