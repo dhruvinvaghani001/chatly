@@ -1,13 +1,21 @@
 import { Button } from '@/components/ui/button'
+import DialogPopUp from '@/components/ui/dialog-popup'
 import { useAuthContext } from '@/context/authSlice'
-import { useChatContext } from '@/context/chatSlice'
+import { setSelectedChat, useChatContext } from '@/context/chatSlice'
 import { Avatar, AvatarFallback, AvatarImage } from '@radix-ui/react-avatar'
-import { Info } from 'lucide-react'
-import React from 'react'
+import { Info, Loader2, Trash } from 'lucide-react'
+import React, { useState } from 'react'
+import { requestHandler } from '@/lib/requestHandler'
+import { deleteChats } from '@/api'
+import { useDispatch } from 'react-redux'
+import toast from 'react-hot-toast'
+import GroupChatDetail from './GroupChatDetail'
 
 const ChatAreaHeader = () => {
   const { userData } = useAuthContext()
   const { selectedChat } = useChatContext()
+  const [loading, setLoading] = useState(false)
+  const dispatch = useDispatch()
 
   const one2oneMemebr = selectedChat?.members.filter(
     item => item.username != userData.username
@@ -18,6 +26,26 @@ const ChatAreaHeader = () => {
     : selectedChat?.members.filter(
         item => item.username != userData.username
       )[0].avatar
+
+  const handleDeleteChat = () => {
+    alert('Are yousure want to delete')
+    requestHandler(
+      async () =>
+        await deleteChats({
+          type: selectedChat.isGroup,
+          chatId: selectedChat?._id
+        }),
+      setLoading,
+      res => {
+        const { data } = res
+        dispatch(setSelectedChat({ chat: null }))
+        toast.success(res?.message)
+      },
+      err => {
+        toast.error(err.message)
+      }
+    )
+  }
 
   return (
     <div>
@@ -36,9 +64,29 @@ const ChatAreaHeader = () => {
           </div>
         </div>
         <div className='flex space-x-2'>
-          <Button variant='ghost' size='icon'>
-            <Info className='h-5 w-5' />
-          </Button>
+          {selectedChat.isGroup ? (
+            <DialogPopUp
+              TriggerComponent={
+                <Button variant='ghost' size='icon'>
+                  <Info className='h-5 w-5' />
+                </Button>
+              }
+              ContentCompnent={GroupChatDetail}
+            />
+          ) : (
+            <Button
+              variant={'destructive'}
+              size='icon'
+              onClick={handleDeleteChat}
+              disabled={loading}
+            >
+              {loading ? (
+                <Loader2 className='animte-spin' />
+              ) : (
+                <Trash className='h-5 w-6' />
+              )}
+            </Button>
+          )}
         </div>
       </div>
     </div>
