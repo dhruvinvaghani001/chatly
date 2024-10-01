@@ -33,7 +33,7 @@ interface Message {
   content: string;
   chat: string;
   attachmentFiles: AttachmentFiles[];
-  createAt: Date;
+  createdAt: Date;
   updatedAt: Date;
   __v: number;
 }
