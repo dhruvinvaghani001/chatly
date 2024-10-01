@@ -31,9 +31,6 @@ const NavBar = () => {
               </>
             )}
           </div>
-          <div className='ml-6'>
-            <ModeToggle></ModeToggle>
-          </div>
         </div>
       </div>
     </nav>
