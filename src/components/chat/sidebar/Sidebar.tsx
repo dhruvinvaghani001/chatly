@@ -10,11 +10,13 @@ import { addunreadMessage, getAllChats } from '@/api'
 import { useDispatch } from 'react-redux'
 import AllChats from './AllChats'
 import { DialogForm } from './DialogForm'
-import { Loader2, LogOut } from 'lucide-react'
+import { Loader2, LogOut, PenSquare } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { logOut as storeLogout, useAuthContext } from '@/context/authSlice'
 import { useNavigate } from 'react-router-dom'
 import { encryptStorage } from '@/lib/storage'
+import DialogPopUp from '@/components/ui/dialog-popup'
+import AddChatForm from './AddChatForm'
 
 const Sidebar = () => {
   const [loading, setLoading] = useState(false)
@@ -85,7 +87,14 @@ const Sidebar = () => {
             <h2 className='text-xl font-semibold'>Chats</h2>
             <div className='flex items-center'>
               <div className='flex space-x-2'>
-                <DialogForm />
+                <DialogPopUp
+                  TriggerComponent={
+                    <Button variant='ghost' size='icon'>
+                      <PenSquare className='h-5 w-5' />
+                    </Button>
+                  }
+                  ContentCompnent={AddChatForm}
+                />
               </div>
               <Button
                 variant={'ghost'}
