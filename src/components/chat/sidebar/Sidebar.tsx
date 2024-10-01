@@ -9,7 +9,6 @@ import toast from 'react-hot-toast'
 import { addunreadMessage, getAllChats } from '@/api'
 import { useDispatch } from 'react-redux'
 import AllChats from './AllChats'
-import { DialogForm } from './DialogForm'
 import { Loader2, LogOut, PenSquare } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { logOut as storeLogout, useAuthContext } from '@/context/authSlice'
@@ -17,6 +16,7 @@ import { useNavigate } from 'react-router-dom'
 import { encryptStorage } from '@/lib/storage'
 import DialogPopUp from '@/components/ui/dialog-popup'
 import AddChatForm from './AddChatForm'
+import useListenChat from '@/hooks/useListenChat'
 
 const Sidebar = () => {
   const [loading, setLoading] = useState(false)
@@ -77,6 +77,8 @@ const Sidebar = () => {
       navigate(0)
     }, 0)
   }
+
+  useListenChat()
 
   return (
     <>
