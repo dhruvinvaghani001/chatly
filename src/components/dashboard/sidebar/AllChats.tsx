@@ -4,7 +4,7 @@ const AllChats = ({ chats }) => {
   return (
     <>
       {chats.map(chat => (
-        <Chat chat={chat}></Chat>
+        <Chat chat={chat} key={chat._id}></Chat>
       ))}
     </>
   )
