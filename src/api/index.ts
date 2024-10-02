@@ -133,8 +133,8 @@ const removeMemberFromGroup = ({ chatId, memberId }) => {
  * @param {string,string} {chatId,memberId}
  * @returns a promise which resolve add functionality in group
  */
-const addMemberInGroup = ({ chatId, memberId }) => {
-  return axiosInstance.patch(`chat/group/${chatId}/add/${memberId}`);
+const addMemberInGroup = ({ chatId, data }) => {
+  return axiosInstance.patch(`chat/group/${chatId}/add`, data);
 };
 
 const getUnreadMessages = () => {
