@@ -17,8 +17,11 @@ import { encryptStorage } from '@/lib/storage'
 import DialogPopUp from '@/components/ui/dialog-popup'
 import AddChatForm from './AddChatForm'
 import useListenChat from '@/hooks/useListenChat'
+import { EncryptStorage } from 'encrypt-storage'
+import useListenMessages from '@/hooks/useListenMessages'
 
 const Sidebar = () => {
+  console.log('side bar')
   const [loading, setLoading] = useState(false)
   const [loggingOut, setLoggingOut] = useState(false)
   const { width } = useWindowsize()
@@ -28,7 +31,6 @@ const Sidebar = () => {
   const { chats, unreadMessages } = useChatContext()
   const { userData } = useAuthContext()
 
-  //fetch all chats and  store to redux store
   useEffect(() => {
     requestHandler(
       async () => await getAllChats(),
@@ -42,44 +44,62 @@ const Sidebar = () => {
         toast.error(err)
       }
     )
-  }, [dispatch])
+  }, [])
 
   // function to store unread messages to db to keep track if user logout
   const handleUnreadMessages = async () => {
-    unreadMessages.forEach(async message => {
-      if (!message?.fromDb) {
-        requestHandler(
-          async () =>
-            await addunreadMessage({
-              userId: userData._id,
-              messageId: message._id,
-              chatId: message.chat
-            }),
-          setLoggingOut,
-          res => {
-            console.log(res)
-          },
-          err => {
-            console.log(err)
-          }
-        )
+    const mapi = new Map()
+    unreadMessages.forEach(message => {
+      if (!message.fromDb) {
+        if (!mapi.has(message.chat)) {
+          mapi.set(message.chat, [message._id])
+        }
+        mapi.get(message.chat).push(message._id)
       }
     })
+
+    const result = []
+
+    mapi.forEach((messageIds, chatId) => {
+      const uniqueMessageIds = [...new Set(messageIds)]
+      result.push({
+        chatId: chatId,
+        messageIds: uniqueMessageIds
+      })
+    })
+
+    console.log(result)
+
+    const data = {
+      values: result,
+      userId: userData._id
+    }
+    console.log(data)
+    requestHandler(
+      async () => await addunreadMessage({ data }),
+      setLoggingOut,
+      res => {
+        console.log(res)
+      },
+      err => {
+        console.log(err)
+      }
+    )
   }
 
   // funnction to logout
-  const handleLogout = async () => {
+  const handleLogout = async e => {
     await handleUnreadMessages()
     dispatch(storeLogout())
-    navigate('/login')
     encryptStorage.clear()
+    navigate('/login')
     setTimeout(() => {
       navigate(0)
     }, 0)
   }
-
   // listen socket events
   useListenChat()
+  useListenMessages()
 
   return (
     <>

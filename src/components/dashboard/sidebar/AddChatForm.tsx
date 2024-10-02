@@ -84,6 +84,7 @@ const AddChatForm = ({ open, setIsOpen }) => {
           if (res.stausCode == 201) {
             console.log('hello')
             dispatch(addChat({ chat: data }))
+            dispatch(setSelectedChat({ chat: data }))
             setIsOpen(false)
             toast.success(res.message)
           } else {

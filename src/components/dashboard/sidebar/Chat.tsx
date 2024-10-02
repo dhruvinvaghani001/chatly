@@ -8,12 +8,13 @@ import {
 import { requestHandler } from '@/lib/requestHandler'
 import { cn } from '@/lib/utils'
 import { Avatar, AvatarFallback, AvatarImage } from '@radix-ui/react-avatar'
-import { Bell } from 'lucide-react'
+import { Bell, Users } from 'lucide-react'
 
 import React, { useState } from 'react'
 import toast from 'react-hot-toast'
 import { useDispatch } from 'react-redux'
 import { motion, AnimatePresence } from 'framer-motion'
+import { GroupThumbnail } from '@/assets'
 
 const Chat = ({ chat }) => {
   const [isSelecting, setIsSelecting] = useState(false)
@@ -58,10 +59,21 @@ const Chat = ({ chat }) => {
         onClick={handleChatSelect}
       >
         <div className='flex items-center'>
-          <Avatar className={`w-12 h-12 mr-3`}>
-            <AvatarImage src={oneToOneChatMemeber?.avatar}></AvatarImage>
-            <AvatarFallback>{}</AvatarFallback>
-          </Avatar>
+          {!chat.isGroup ? (
+            <Avatar
+              className={`w-12 h-12 mr-3 bg-black rounded-full flex justify-center items-center`}
+            >
+              <AvatarImage src={oneToOneChatMemeber?.avatar}></AvatarImage>
+              <AvatarFallback>{}</AvatarFallback>
+            </Avatar>
+          ) : (
+            <Avatar
+              className={`w-12 h-12 mr-3 bg-black rounded-full flex items-center justify-center`}
+            >
+              <AvatarImage src={GroupThumbnail}></AvatarImage>
+              <AvatarFallback>{}</AvatarFallback>
+            </Avatar>
+          )}
           <div>
             <h3 className='font-semibold'>
               {chat.isGroup ? chat.name : oneToOneChatMemeber.username}
