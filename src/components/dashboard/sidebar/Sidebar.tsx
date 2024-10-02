@@ -78,6 +78,7 @@ const Sidebar = () => {
     }, 0)
   }
 
+  // listen socket events
   useListenChat()
 
   return (
@@ -111,6 +112,7 @@ const Sidebar = () => {
               </Button>
             </div>
           </div>
+
           <ScrollArea className='flex-1'>
             {loading ? (
               <div className='flex justify-center mt-4'>

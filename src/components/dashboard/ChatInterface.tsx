@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import ChatArea from './chatArea/ChatArea'
+import ChatArea from './chat-area/ChatArea'
 import Sidebar from './sidebar/Sidebar'
 import { useChatContext } from '@/context/chatSlice'
 import useMessages from '@/context/zustand'

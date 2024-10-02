@@ -9,7 +9,8 @@ import { requestHandler } from '@/lib/requestHandler'
 import { deleteChats } from '@/api'
 import { useDispatch } from 'react-redux'
 import toast from 'react-hot-toast'
-import GroupChatDetail from './GroupChatDetail'
+import GroupChatDetail from './group-chat/GroupChatDetail'
+import { DeleteAlertDialogDemo } from '@/components/ui/delete-alert-dialog'
 
 const ChatAreaHeader = () => {
   const { userData } = useAuthContext()
@@ -21,14 +22,14 @@ const ChatAreaHeader = () => {
     item => item.username != userData.username
   )[0]
 
+  const a = 1
   const thumbanil = selectedChat?.isGroup
     ? 'https://api.dicebear.com/9.x/adventurer/svg?seed=Eliza'
     : selectedChat?.members.filter(
         item => item.username != userData.username
       )[0].avatar
 
-  const handleDeleteChat = () => {
-    alert('Are yousure want to delete')
+  const handleDeleteChat = async () => {
     requestHandler(
       async () =>
         await deleteChats({
@@ -74,18 +75,19 @@ const ChatAreaHeader = () => {
               ContentCompnent={GroupChatDetail}
             />
           ) : (
-            <Button
-              variant={'destructive'}
-              size='icon'
-              onClick={handleDeleteChat}
-              disabled={loading}
-            >
-              {loading ? (
-                <Loader2 className='animte-spin' />
-              ) : (
-                <Trash className='h-5 w-6' />
-              )}
-            </Button>
+            <DeleteAlertDialogDemo
+              triggerButton={
+                <Button variant={'destructive'} size='icon' disabled={loading}>
+                  {loading ? (
+                    <Loader2 className='animte-spin' />
+                  ) : (
+                    <Trash className='h-5 w-6' />
+                  )}
+                </Button>
+              }
+              handleSubmit={handleDeleteChat}
+              loading={loading}
+            />
           )}
         </div>
       </div>

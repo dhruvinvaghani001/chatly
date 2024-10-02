@@ -1,5 +1,5 @@
 import React from 'react'
-import ChatInterface from '../chat/ChatInterface'
+import ChatInterface from './ChatInterface'
 
 const Dashboard = () => {
   return (

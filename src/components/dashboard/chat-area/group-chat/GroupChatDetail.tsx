@@ -4,7 +4,7 @@ import { useAuthContext } from '@/context/authSlice'
 import { useChatContext } from '@/context/chatSlice'
 import { Avatar, AvatarImage } from '@radix-ui/react-avatar'
 import { DialogDescription, DialogTitle } from '@radix-ui/react-dialog'
-import { Minus, MinusCircle } from 'lucide-react'
+import { Minus, MinusCircle, Trash } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import React from 'react'
 
@@ -53,6 +53,9 @@ const GroupChatDetail = ({ open, setIsOpen }) => {
             )}
           </div>
         ))}
+        <Button variant={'destructive'} size='icon'>
+          <Trash className='w-5' />
+        </Button>
       </div>
     </>
   )
