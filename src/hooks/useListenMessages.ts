@@ -11,7 +11,12 @@ export default function useListenMessages() {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    console.log("hello");
     socket?.on("new message", (message) => {
+      console.log("new MESSAGE EVBENT");
+      if (selectedChat == null) {
+        dispatch(setUnreadMessages({ message: message }));
+      }
       if (message.chat == selectedChat?._id) {
         setMessages([...messages, message]);
       } else {
@@ -23,5 +28,5 @@ export default function useListenMessages() {
     return () => {
       socket?.off("new message");
     };
-  }, [socket, dispatch, messages, setMessages, selectedChat?._id]);
+  }, [socket, selectedChat, selectedChat?._id]);
 }

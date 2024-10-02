@@ -9,8 +9,9 @@ import { requestHandler } from '@/lib/requestHandler'
 import { deleteChats } from '@/api'
 import { useDispatch } from 'react-redux'
 import toast from 'react-hot-toast'
-import GroupChatDetail from './group-chat/GroupChatDetail'
+import GroupChatDetail from './group-chat-detail/GroupChatDetail'
 import { DeleteAlertDialogDemo } from '@/components/ui/delete-alert-dialog'
+import { GroupThumbnail } from '@/assets'
 
 const ChatAreaHeader = () => {
   const { userData } = useAuthContext()
@@ -23,22 +24,18 @@ const ChatAreaHeader = () => {
   )[0]
 
   const a = 1
-  const thumbanil = selectedChat?.isGroup
-    ? 'https://api.dicebear.com/9.x/adventurer/svg?seed=Eliza'
-    : selectedChat?.members.filter(
-        item => item.username != userData.username
-      )[0].avatar
 
   const handleDeleteChat = async () => {
     requestHandler(
       async () =>
         await deleteChats({
-          type: selectedChat.isGroup,
+          type: false,
           chatId: selectedChat?._id
         }),
       setLoading,
       res => {
         const { data } = res
+        console.log(data)
         dispatch(setSelectedChat({ chat: null }))
         toast.success(res?.message)
       },
@@ -52,10 +49,17 @@ const ChatAreaHeader = () => {
     <div>
       <div className='flex items-center justify-between p-4 border-b border-gray-700'>
         <div className='flex items-center'>
-          <Avatar className='w-10 h-10 mr-3'>
-            <AvatarImage src={thumbanil}></AvatarImage>
-            <AvatarFallback></AvatarFallback>
-          </Avatar>
+          {selectedChat.isGroup ? (
+            <Avatar className='w-10 h-10 mr-3 bg-muted-foreground flex justify-center items-center rounded-full'>
+              <AvatarImage src={GroupThumbnail}></AvatarImage>
+              <AvatarFallback></AvatarFallback>
+            </Avatar>
+          ) : (
+            <Avatar className='w-10 h-10'>
+              <AvatarImage src={one2oneMemebr.avatar}></AvatarImage>
+              <AvatarFallback></AvatarFallback>
+            </Avatar>
+          )}
           <div>
             <h2 className='font-semibold'>
               {selectedChat?.isGroup

@@ -1,3 +1,4 @@
 import Logo from "./logo.svg";
+import GroupThumbnail from "./grouplogo.svg";
 
-export { Logo };
+export { GroupThumbnail, Logo };

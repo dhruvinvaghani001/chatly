@@ -6,6 +6,8 @@ import useMessages from '@/context/zustand'
 import { requestHandler } from '@/lib/requestHandler'
 import { getMessagesByChatId } from '@/api'
 import toast from 'react-hot-toast'
+import useListenMessages from '@/hooks/useListenMessages'
+import useListenChat from '@/hooks/useListenChat'
 
 const ChatInterface = () => {
   const { setMessages } = useMessages()
