@@ -145,10 +145,8 @@ const deleteUnreadMessages = (chatId) => {
   return axiosInstance.delete(`unread-message/${chatId}`);
 };
 
-const addunreadMessage = ({ userId, messageId, chatId }) => {
-  return axiosInstance.post(
-    `unread-message/u/${userId}/c/${chatId}/m/${messageId}`
-  );
+const addunreadMessage = ({ data }) => {
+  return axiosInstance.post(`unread-message/add`, data);
 };
 
 export {
