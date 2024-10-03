@@ -14,7 +14,7 @@ import { useChatContext } from '@/context/chatSlice'
 import useMessages from '@/context/zustand'
 import { requestHandler } from '@/lib/requestHandler'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Loader2, PlusCircle, SendHorizontal } from 'lucide-react'
+import { Loader2, PlusCircle, SendHorizontal, X } from 'lucide-react'
 import { useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import toast from 'react-hot-toast'
@@ -49,7 +49,7 @@ const ChatInput = () => {
     const formData = new FormData()
     formData.append('content', values.message)
 
-    values.files.forEach((file) => {
+    values.files.forEach(file => {
       formData.append('attachmentFiles', file)
     })
 
@@ -82,7 +82,7 @@ const ChatInput = () => {
 
   return (
     <>
-      <div className='p-4 border-t border-gray-700'>
+      <div className='py-0 px-4 md:p-4 border-t border-gray-700 '>
         <div className='flex items-center'>
           <Form {...form}>
             <form
@@ -113,33 +113,35 @@ const ChatInput = () => {
                           className='mr-4'
                           onClick={() => fileInputRef?.current.click()}
                         />
-                        {/* <div className='hidden md:flex flex-wrap gap-4'>
-                          {field.value?.map((file, index) => (
-                            <div key={index} className='relative'>
-                              <img
-                                src={URL.createObjectURL(file)}
-                                alt={file.name}
-                                className='w-32 h-32 object-cover rounded-md'
-                              />
-                              <Button
-                                type='button'
-                                variant='destructive'
-                                size='icon'
-                                className='absolute -top-2 -right-2 h-6 w-6 rounded-full'
-                                onClick={() => {
-                                  const newFiles =
-                                    field.value?.filter(
-                                      (_, i) => i !== index
-                                    ) || []
-                                  field.onChange(newFiles)
-                                  form.trigger('message')
-                                }}
-                              >
-                                <X className='h-4 w-4' />
-                              </Button>
-                            </div>
-                          ))}
-                        </div> */}
+                        {field.value.length > 0 && (
+                          <div className='w-3/4 rounded-md p-4 justify-center bg-popover-foreground fixed bottom-28 left-30 flex flex-wrap  gap-6  md:bg-transparent md:p-4 md:fixed md:bottom-36 md:left-30 md:flex md:flex-wrap md:gap-4'>
+                            {field.value?.map((file, index) => (
+                              <div key={index} className='relative'>
+                                <img
+                                  src={URL.createObjectURL(file)}
+                                  alt={file.name}
+                                  className='w-32 h-32 object-cover rounded-md'
+                                />
+                                <Button
+                                  type='button'
+                                  variant='destructive'
+                                  size='icon'
+                                  className='absolute -top-2 -right-2 h-6 w-6 rounded-full'
+                                  onClick={() => {
+                                    const newFiles =
+                                      field.value?.filter(
+                                        (_, i) => i !== index
+                                      ) || []
+                                    field.onChange(newFiles)
+                                    form.trigger('message')
+                                  }}
+                                >
+                                  <X className='h-4 w-4' />
+                                </Button>
+                              </div>
+                            ))}
+                          </div>
+                        )}
                       </div>
                     </FormControl>
                     <FormMessage />

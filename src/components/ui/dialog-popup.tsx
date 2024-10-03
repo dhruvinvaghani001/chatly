@@ -1,5 +1,11 @@
 import React, { useState } from 'react'
-import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+  DialogTrigger
+} from '@/components/ui/dialog'
 
 const DialogPopUp = ({ TriggerComponent, ContentCompnent }) => {
   const [open, setIsOpen] = useState(false)
@@ -12,10 +18,13 @@ const DialogPopUp = ({ TriggerComponent, ContentCompnent }) => {
       <Dialog open={open} onOpenChange={setIsOpen}>
         <DialogTrigger asChild>{TriggerComponent}</DialogTrigger>
         <DialogContent className='sm:max-w-[425px] shadow-sm shadow-card-background'>
-          <ContentCompnent
-            open={open}
-            setIsOpen={handleClose}
-          ></ContentCompnent>
+          <DialogTitle></DialogTitle>
+          <DialogDescription>
+            <ContentCompnent
+              open={open}
+              setIsOpen={handleClose}
+            ></ContentCompnent>
+          </DialogDescription>
         </DialogContent>
       </Dialog>
     </>

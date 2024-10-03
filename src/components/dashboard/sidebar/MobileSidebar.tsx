@@ -9,7 +9,6 @@ import {
 import { cn } from '@/lib/utils'
 import { Avatar, AvatarFallback } from '@radix-ui/react-avatar'
 import React, { useState } from 'react'
-import { NotificationBell } from './Chat'
 import { Badge } from '@/components/ui/badge'
 import { useDispatch } from 'react-redux'
 import { requestHandler } from '@/lib/requestHandler'
@@ -21,21 +20,21 @@ const Chat = ({ chat }) => {
   const { userData } = useAuthContext()
   const dispatch = useDispatch()
   const [loading, setLoading] = useState(false)
-  const isGroup = chat.isGroup
-  const isSelectedChat = selectedChat._id == chat._id
+  const isGroup = chat?.isGroup
+  const isSelectedChat = selectedChat?._id == chat._id
 
-  const oneToOneChatMemeber = chat.members.filter(
+  const oneToOneChatMemeber = chat?.members.filter(
     item => item.username != userData.username
   )[0]
 
   const notificationCount = unreadMessages?.filter(
-    message => message.chat.toString() == chat._id.toString()
+    message => message.chat.toString() == chat?._id.toString()
   ).length
 
   const handleSelectChat = () => {
     dispatch(setSelectedChat({ chat: chat }))
     requestHandler(
-      async () => await deleteUnreadMessages(chat._id),
+      async () => await deleteUnreadMessages(chat?._id),
       setLoading,
       res => {},
       err => {
@@ -109,7 +108,7 @@ const MobileSidebar = ({ chats }) => {
       <div className='w-16 md:hidden px-2 border-r-2  flex flex-col items-center py-4 space-y-4'>
         <h2 className='text-xs font-semibold mb-6'>Chats</h2>
         {chats.map(chat => (
-          <Chat chat={chat} key={chat._id} />
+          <Chat chat={chat} key={chat?._id} />
         ))}
       </div>
     </>

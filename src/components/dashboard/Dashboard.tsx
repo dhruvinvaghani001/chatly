@@ -30,6 +30,9 @@ const Dashboard = () => {
     )
   }, [])
 
+  useListenMessages()
+  useListenChat()
+
   return (
     <>
       <ChatInterface />

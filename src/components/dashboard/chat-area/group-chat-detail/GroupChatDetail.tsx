@@ -46,8 +46,6 @@ const GroupChatDetail = ({ open, setIsOpen }) => {
     )
   }
 
-  useListenChat()
-
   return (
     <>
       <DialogHeader>

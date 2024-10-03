@@ -17,6 +17,7 @@ export default function useListenChat() {
 
   useEffect(() => {
     socket?.on("new chat", (payload) => {
+      console.log("NEW CHAT CREATED SOCKET EVENT");
       dispatch(addChat({ chat: payload }));
     });
     return () => {
@@ -26,8 +27,7 @@ export default function useListenChat() {
 
   useEffect(() => {
     socket?.on("chat-update", (chat) => {
-      console.log("updated chat");
-      console.log(chat);
+      console.log("CHAT UPDATE SOCKET EVENT");
       dispatch(updateChat({ chat: chat }));
     });
 
@@ -37,7 +37,20 @@ export default function useListenChat() {
   }, [socket]);
 
   useEffect(() => {
+    socket?.on("group-update", (chat) => {
+      console.log("GROUP CHAT UPDATE SOCKET EVENT");
+      dispatch(updateChat({ chat: chat }));
+      dispatch(setSelectedChat({ chat: chat }));
+    });
+
+    return () => {
+      socket?.off("group-update");
+    };
+  }, [socket]);
+
+  useEffect(() => {
     socket?.on("delete-chat", (chat) => {
+      console.log("CHAT DELETE SOCKET EVENT!");
       dispatch(deleteChat({ chat: chat }));
       dispatch(removeUnnreadMessages({ chatId: chat._id.toString() }));
       dispatch(setSelectedChat({ chat: null }));
@@ -46,5 +59,5 @@ export default function useListenChat() {
     return () => {
       socket?.off("delete-chat");
     };
-  }, [socket]);
+  }, [socket, dispatch, setMessages]);
 }
