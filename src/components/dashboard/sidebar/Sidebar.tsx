@@ -31,6 +31,8 @@ const Sidebar = () => {
   const { chats, unreadMessages } = useChatContext()
   const { userData } = useAuthContext()
 
+  console.log(chats)
+
   useEffect(() => {
     requestHandler(
       async () => await getAllChats(),
@@ -97,9 +99,6 @@ const Sidebar = () => {
       navigate(0)
     }, 0)
   }
-  // listen socket events
-  useListenChat()
-  useListenMessages()
 
   return (
     <>
