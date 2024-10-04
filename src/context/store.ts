@@ -7,6 +7,7 @@ const store = configureStore({
     auth: authSlice.reducer,
     chat: chatSlice.reducer,
   },
+  devTools: import.meta.env.VITE_ENV !== "production",
 });
 
 export default store;
