@@ -4,7 +4,7 @@ import axios from "axios";
 /*create a axios instance with server base URL*/
 const axiosInstance = axios.create({
   baseURL: import.meta.env.VITE_SERVER_URL,
-  withCredentials: import.meta.env.ALLOW === true ? false : true,
+  withCredentials: import.meta.env.VITE_ALLOW === true ? false : true,
   timeout: 120000,
 });
 
