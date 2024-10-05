@@ -52,7 +52,7 @@ const SignupForm = () => {
         async () => await signUp(values),
         setLoading,
         res => {
-          console.log(res)
+          // console.log(res)
           if (res.success) {
             toast.success(res.message)
             navigate('/login')

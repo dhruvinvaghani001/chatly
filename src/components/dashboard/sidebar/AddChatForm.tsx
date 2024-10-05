@@ -82,7 +82,6 @@ const AddChatForm = ({ open, setIsOpen }) => {
         (res) => {
           const { data } = res;
           if (res.stausCode == 201) {
-            console.log("hello");
             dispatch(addChat({ chat: data }));
             dispatch(setSelectedChat({ chat: data }));
             setIsOpen(false);

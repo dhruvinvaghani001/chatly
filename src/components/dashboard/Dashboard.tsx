@@ -17,7 +17,7 @@ const Dashboard = () => {
       async () => await getUnreadMessages(),
       setLoading,
       res => {
-        console.log(res)
+        // console.log(res)
         const { data } = res
         const dataTostore = data.map(message => {
           return { ...message, fromDb: true }

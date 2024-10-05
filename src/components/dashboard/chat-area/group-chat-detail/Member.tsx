@@ -25,7 +25,7 @@ const Member = ({ member }) => {
         }),
       setLoading,
       res => {
-        console.log(res)
+        // console.log(res)
         dispatch(setSelectedChat({ chat: res.data }))
         toast.success(res.message)
       },

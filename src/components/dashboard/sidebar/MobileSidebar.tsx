@@ -104,7 +104,7 @@ const Chat = ({ chat }) => {
 };
 
 const MobileSidebar = ({ chats }) => {
-  console.log("from mobile sidebar");
+  // console.log("from mobile sidebar");
 
   return (
     <>

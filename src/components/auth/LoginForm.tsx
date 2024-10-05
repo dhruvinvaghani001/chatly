@@ -45,7 +45,7 @@ const LoginForm = () => {
         async () => await login(values),
         setLoading,
         res => {
-          console.log(res)
+          // console.log(res)
           if (res.success) {
             dispatch(StoreLogin({ user: res.data }))
             toast.success(res.message)

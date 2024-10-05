@@ -35,7 +35,7 @@ const ChatAreaHeader = () => {
       setLoading,
       res => {
         const { data } = res
-        console.log(data)
+        // console.log(data)
         dispatch(setSelectedChat({ chat: null }))
         toast.success(res?.message)
       },

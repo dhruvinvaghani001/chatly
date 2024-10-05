@@ -97,7 +97,7 @@ const chatSlice = createSlice({
     setUnreadMessages: (state, action) => {
       const map = new Map();
       const newUnreadWhole = [...state.unreadMessages, action.payload.message];
-      console.log(newUnreadWhole);
+      // console.log(newUnreadWhole);
       newUnreadWhole.forEach((obj) => {
         map.set(obj._id.toString(), obj);
       });

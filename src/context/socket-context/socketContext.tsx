@@ -20,7 +20,7 @@ const SocketContext = createContext<SocketContextType>({
 const SocketContextProvider = ({ children }: { children: ReactNode }) => {
   const [socket, setSocket] = useState<ReturnType<typeof socketio> | null>(null)
   const { userData } = useAuthContext()
-  console.log(socket)
+  // console.log(socket)
   useEffect(() => {
     if (userData?._id) {
       const socketInstance = io(import.meta.env.VITE_SOCKET_URL)

@@ -39,21 +39,21 @@ const Logout = (props) => {
       });
     });
 
-    console.log(result);
+    // console.log(result);
 
     const data = {
       values: result,
       userId: userData._id,
     };
-    console.log(data);
+    // console.log(data);
     requestHandler(
       async () => await addunreadMessage({ data }),
       setLoggingOut,
       (res) => {
-        console.log(res);
+        // console.log(res);
       },
       (err) => {
-        console.log(err);
+        // console.log(err);
       }
     );
   };

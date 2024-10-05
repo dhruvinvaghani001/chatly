@@ -16,15 +16,8 @@ export default function useListenMessages() {
         dispatch(setUnreadMessages({ message: message }));
       }
       if (message.chat == selectedChat?._id) {
-        console.log("MESAGE FOR SELECTED CHAT");
-        console.log("messages");
-        console.log(messages);
-        console.log("message");
-        console.log(message);
-
         setMessages([...messages, message]);
       } else {
-        console.log("event for unreadmesage");
         dispatch(setUnreadMessages({ message: message }));
       }
     });

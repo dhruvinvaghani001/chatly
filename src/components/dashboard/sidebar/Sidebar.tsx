@@ -22,7 +22,7 @@ const Sidebar = () => {
 
   const { chats } = useChatContext();
 
-  console.log(chats);
+  // console.log(chats);
 
   useEffect(() => {
     requestHandler(
@@ -30,7 +30,7 @@ const Sidebar = () => {
       setLoading,
       (res) => {
         const { data } = res;
-        console.log(res);
+        // console.log(res);
         dispatch(setChats({ chat: data }));
       },
       (err) => {
