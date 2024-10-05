@@ -65,6 +65,7 @@ const Logout = (props) => {
   const handleLogout = async (e) => {
     await handleUnreadMessages();
     dispatch(storeLogout());
+    encryptStorage.clear();
     setTimeout(() => {
       navigate("/login");
       setTimeout(() => {
