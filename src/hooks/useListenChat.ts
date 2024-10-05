@@ -38,14 +38,18 @@ export default function useListenChat() {
 
   useEffect(() => {
     socket?.on("group-update", (chat) => {
+      console.log("GROUP UPDATE SOCKET EVENT");
       dispatch(updateChat({ chat: chat }));
-      // console.log("hello from conditional");
-      // console.log(selectedChat);
-      // console.log(chat._id);
-      // console.log(selectedChat?._id == chat._id.toString());
+      console.log("SELECTED CHAT====>");
+      console.log(selectedChat);
+      console.log("CHAT ID====>");
+      console.log(chat._id);
+      console.log("IS CHAT SELECTED");
+      console.log(selectedChat?._id == chat._id.toString());
 
       if (selectedChat?._id == chat._id.toString()) {
-        // console.log("hello");
+        //console.log("hello");
+        console.log("YES SET SELECTEDCHATTO UPDATEONE");
         dispatch(setSelectedChat({ chat: chat }));
       }
     });
@@ -53,7 +57,7 @@ export default function useListenChat() {
     return () => {
       socket?.off("group-update");
     };
-  }, [socket]);
+  }, [socket, dispatch, selectedChat._id]);
 
   useEffect(() => {
     socket?.on("delete-chat", (chat) => {
