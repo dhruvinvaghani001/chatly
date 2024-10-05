@@ -161,7 +161,7 @@ const ChatInput = () => {
                         placeholder="Type a message..."
                         {...field}
                         onKeyDown={(event) => handleKeyDown(event)}
-                        autocomplete="off"
+                        autoComplete="off"
                       />
                     </FormControl>
                     <FormDescription />
