@@ -57,7 +57,7 @@ export default function useListenChat() {
     return () => {
       socket?.off("group-update");
     };
-  }, [socket, dispatch, selectedChat._id]);
+  }, [socket, dispatch, selectedChat?._id]);
 
   useEffect(() => {
     socket?.on("delete-chat", (chat) => {
