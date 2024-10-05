@@ -39,7 +39,13 @@ export default function useListenChat() {
   useEffect(() => {
     socket?.on("group-update", (chat) => {
       dispatch(updateChat({ chat: chat }));
-      if (selectedChat._id == chat._id) {
+      // console.log("hello from conditional");
+      // console.log(selectedChat);
+      // console.log(chat._id);
+      // console.log(selectedChat?._id == chat._id.toString());
+
+      if (selectedChat?._id == chat._id.toString()) {
+        // console.log("hello");
         dispatch(setSelectedChat({ chat: chat }));
       }
     });
