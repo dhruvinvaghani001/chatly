@@ -46,26 +46,31 @@ const Logout = (props) => {
       userId: userData._id,
     };
     console.log(data);
-    requestHandler(
-      async () => await addunreadMessage({ data }),
-      setLoggingOut,
-      (res) => {
-        console.log(res);
-      },
-      (err) => {
-        console.log(err);
-      }
-    );
+    return new Promise((resolve, reject) => {
+      requestHandler(
+        async () => await addunreadMessage({ data }),
+        setLoggingOut,
+        (res) => {
+          console.log("Unread messages stored successfully:", res);
+          resolve(res);
+        },
+        (err) => {
+          console.error("Error storing unread messages:", err);
+          reject(err);
+        }
+      );
+    });
   };
 
   const handleLogout = async (e) => {
     await handleUnreadMessages();
     dispatch(storeLogout());
-    // encryptStorage.clear();
-    // navigate("/login");
-    // setTimeout(() => {
-    //   navigate(0);
-    // }, 0);
+    setTimeout(() => {
+      navigate("/login");
+      setTimeout(() => {
+        navigate(0);
+      }, 100);
+    }, 500);
   };
 
   return (
