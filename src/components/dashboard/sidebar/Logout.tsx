@@ -45,15 +45,15 @@ const Logout = (props) => {
       values: result,
       userId: userData._id,
     };
-    // console.log(data);
+    console.log(data);
     requestHandler(
       async () => await addunreadMessage({ data }),
       setLoggingOut,
       (res) => {
-        // console.log(res);
+        console.log(res);
       },
       (err) => {
-        // console.log(err);
+        console.log(err);
       }
     );
   };
@@ -61,11 +61,11 @@ const Logout = (props) => {
   const handleLogout = async (e) => {
     await handleUnreadMessages();
     dispatch(storeLogout());
-    encryptStorage.clear();
-    navigate("/login");
-    setTimeout(() => {
-      navigate(0);
-    }, 0);
+    // encryptStorage.clear();
+    // navigate("/login");
+    // setTimeout(() => {
+    //   navigate(0);
+    // }, 0);
   };
 
   return (
