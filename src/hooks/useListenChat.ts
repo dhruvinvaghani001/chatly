@@ -4,6 +4,7 @@ import {
   removeUnnreadMessages,
   setSelectedChat,
   updateChat,
+  useChatContext,
 } from "@/context/chatSlice";
 import { useSocketContext } from "@/context/socket-context/socketContext";
 import useMessages from "@/context/zustand";
@@ -14,6 +15,7 @@ export default function useListenChat() {
   const dispatch = useDispatch();
   const { socket } = useSocketContext();
   const { messages, setMessages } = useMessages();
+  const { selectedChat } = useChatContext();
 
   useEffect(() => {
     socket?.on("new chat", (payload) => {
@@ -37,7 +39,9 @@ export default function useListenChat() {
   useEffect(() => {
     socket?.on("group-update", (chat) => {
       dispatch(updateChat({ chat: chat }));
-      dispatch(setSelectedChat({ chat: chat }));
+      if (selectedChat._id == chat._id) {
+        dispatch(setSelectedChat({ chat: chat }));
+      }
     });
 
     return () => {
@@ -47,7 +51,6 @@ export default function useListenChat() {
 
   useEffect(() => {
     socket?.on("delete-chat", (chat) => {
-     
       dispatch(deleteChat({ chat: chat }));
       dispatch(removeUnnreadMessages({ chatId: chat._id.toString() }));
       dispatch(setSelectedChat({ chat: null }));
