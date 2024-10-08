@@ -175,7 +175,7 @@ const ChatInput = () => {
                 disabled={loading}
               >
                 {loading ? (
-                  <Loader2 className="aninmate-spin" />
+                  <Loader2 className="animate-spin" />
                 ) : (
                   <SendHorizontal className="w-4 md:w-6" />
                 )}
