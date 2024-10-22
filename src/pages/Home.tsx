@@ -23,7 +23,7 @@ const Home = () => {
                   connections.
                 </p>
                 <div className="space-x-4">
-                  <a href="/dashboard">
+                  <a href="/login">
                     <Button
                       size="lg"
                       className="px-8 bg-indigo-600 hover:bg-indigo-500"
